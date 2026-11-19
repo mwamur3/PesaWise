@@ -3,45 +3,70 @@ package com.app.pesawise
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+
+import androidx.lifecycle.viewmodel.compose.viewModel
+
+import com.app.pesawise.data.local.AppDatabase
+
+import com.app.pesawise.data.repository.BudgetRepository
+import com.app.pesawise.data.repository.IncomeRepository
+import com.app.pesawise.data.repository.ExpenseRepository
+
+import com.app.pesawise.di.PesaWiseViewModelFactory
+
+import com.app.pesawise.viewmodel.BudgetViewModel
+import com.app.pesawise.viewmodel.IncomeViewModel
+import com.app.pesawise.viewmodel.ExpenseViewModel
+
+import com.app.pesawise.ui.screens.HomeScreen
 import com.app.pesawise.ui.theme.PesaWiseTheme
 
 class MainActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+
+        // Initialise Room Database
+        val database = AppDatabase.getDatabase(applicationContext)
+
+        // Initialise repositories
+        val budgetRepository =
+            BudgetRepository(database.budgetDao())
+
+        val incomeRepository =
+            IncomeRepository(database.incomeDao())
+
+        val expenseRepository =
+            ExpenseRepository(database.expenseDao())
+
+        // Create ViewModel Factory
+        val factory = PesaWiseViewModelFactory(
+            budgetRepository,
+            incomeRepository,
+            expenseRepository
+        )
+
         setContent {
+
             PesaWiseTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+
+                // Initialise ViewModels
+                val budgetViewModel: BudgetViewModel =
+                    viewModel(factory = factory)
+
+                val incomeViewModel: IncomeViewModel =
+                    viewModel(factory = factory)
+
+                val expenseViewModel: ExpenseViewModel =
+                    viewModel(factory = factory)
+
+                // Display PesaWise Dashboard
+                HomeScreen(
+                    budgetViewModel = budgetViewModel,
+                    incomeViewModel = incomeViewModel,
+                    expenseViewModel = expenseViewModel
+                )
             }
         }
-    }
-}
-
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    PesaWiseTheme {
-        Greeting("Android")
     }
 }
