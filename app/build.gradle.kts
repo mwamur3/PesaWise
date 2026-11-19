@@ -52,7 +52,9 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
-
+    implementation("androidx.compose.material:material-icons-extended")
+    // Navigation Compose
+    implementation(libs.androidx.navigation.compose)
     // Room Database
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
