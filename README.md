@@ -1,6 +1,6 @@
 # PesaWise
 
-A student budget app for Android. It helps students plan a monthly budget, track income and expenses, and see what money is left.
+A student budget app for Android. It helps students plan a monthly budget, track income and expenses, and see what money is left for use.
 ## The problem
 
 Many students run out of money before the month ends because they don't track where it goes. PesaWise lets them split a budget into categories and warns them when they are overspending.
